@@ -1,5 +1,5 @@
 import "../app/global.css";
-import Link from "next/link";
+import Header from "../components/header";
 
 export const metadata = {
   title: "Next.js",
@@ -10,26 +10,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning data-theme="light">
       <body>
-        <header className="bg-gray-100 shadow-md">
-          <div className="container mx-auto">
-            <div className="navbar">
-              <div className="flex-1">
-                <Link className="btn btn-ghost text-xl" href="/">
-                  BudgetingApp
-                </Link>
-              </div>
-              <div className="flex-none">
-                <ul className="menu menu-horizontal px-1">
-                  <li>
-                    <Link href="/login">Login</Link>
-                  </li>
-                  <li></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </header>
-
+        <Header />
         <main className="container mx-auto p-10">{children}</main>
 
         <footer className="text-gray-400 text-center text-small py-5"><small>Copyright &copy; {new Date().getFullYear()} - All rights reserved.</small></footer>

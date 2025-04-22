@@ -1,14 +1,13 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
+//import { useFormStatus } from "react-dom";
 import { useActionState } from "react";
 import { Register } from "../actions/userHelpers";
 
 export default function RegisterForm() {
   const [formState, formAction] = useActionState(Register, {});
 
-  console.log(formState);
-
+  console.log(formState)
   return (
     <form action={formAction} className="max-w-xs mx-auto">
       <div className="mb-3">
