@@ -22,11 +22,16 @@ export default async function Header() {
                 </li>
               )}
               {user && (
-                <li>
-                  <form action={logout} className="btn btn-neutral">
-                    <button>Log out</button>
-                  </form>
-                </li>
+                <>
+                  <li className="mr-3">
+                    <Link href='/create-new-budget' className="btn btn-primary ">+Budget</Link>
+                  </li>
+                  <li>
+                    <form action={logout} className="btn btn-neutral">
+                      <button>Log out</button>
+                    </form>
+                  </li>
+                </>
               )}
               <li></li>
             </ul>

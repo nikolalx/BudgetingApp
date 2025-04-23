@@ -30,12 +30,10 @@ export const login = async function (prevState, formData) {
   if (typeof user.password != "string") user.password = "";
 
   const fetchedUser = await getUserByUsername(user.username, "users");
-  console.log(fetchedUser)
-
+  console.log(fetchedUser);
 
   if (!fetchedUser) {
     return errors;
-
   }
 
   const matchingStatus = bcrypt.compareSync(
@@ -49,7 +47,10 @@ export const login = async function (prevState, formData) {
 
   // create jwt value
   const tokenValue = jwt.sign(
-    { userId: fetchedUser.user_id, exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 },
+    {
+      userId: fetchedUser.user_id,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+    },
     process.env.JWT_SECRET
   );
 
@@ -62,8 +63,7 @@ export const login = async function (prevState, formData) {
     secure: true,
   });
 
-  return redirect('/')
-
+  return redirect("/");
 };
 
 export const logout = async function () {
@@ -101,6 +101,11 @@ export const Register = async function (prevState, formData) {
 
   if (user.username == "") errors.username = "You must provide a username!";
 
+  // check if user exists
+  const userCheck = await getUserByUsername(user.username, 'users');
+
+  if(userCheck && user.password) errors.username = 'This user already exists!'
+
   //Password validation
   if (user.password.length < 8)
     errors.password = "Password must be at least 8 characters long!";
@@ -111,6 +116,8 @@ export const Register = async function (prevState, formData) {
     errors.password = "Password can only contain letters and numbers!";
 
   if (user.password == "") errors.password = "You must provide a password!";
+
+  if(errors.password && userCheck) errors.username = ''
 
   if (errors.username || errors.password) {
     return {
