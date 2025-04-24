@@ -1,17 +1,53 @@
 "use client";
 
 import { useActionState } from "react";
+import { useState } from "react";
 import { login } from "../../actions/userHelpers";
+
+
 
 export default function Page() {
   const [formState, formAction] = useActionState(login, {});
+  const [monthOfPayState, setMonthOfPayState] = useState(new Date().getFullYear() + "-0" + (new Date().getMonth() + 2));
+  const [lastDayPayState, setLastDayPayState] = useState("Last Day is:")
   console.log(formState);
+
+  const daysBetweenPays = (e) => {
+    const value = e.target.value;
+
+    const payDate = new Date(value + '-25');
+
+    const dayName = payDate.toLocaleDateString('en-US', {weekday: 'short'});
+
+    const DayNumb = payDate.getDate();
+
+    const month = payDate.getMonth() + 1;
+
+    const year = payDate.getFullYear();
+
+    //Last Day of Pay
+    const lastDayDate = new Date(value + '-25');
+
+    const lastDayName = lastDayDate.toLocaleDateString('en-US', {weekday: 'short'});
+
+    const lastDayNumb = lastDayDate.getDate();
+
+    const lastDayMonth = lastDayDate.getMonth() + 2;
+
+    // payDate.setMonth(payDate.getMonth() + 1)
+    setMonthOfPayState(value);
+    setLastDayPayState()
+    console.log(dayName, DayNumb, month, year, 'payDay is :', payDate);
+  
+  }
 
   return (
     <>
-      <h2 className="text-center text-2xl text-gray-6-- mb-5">
+      <h1 className="text-center text-3xl text-gray-6-- mb-5">
         New Budgeting Month
-      </h2>
+      </h1>
+
+      <h3 className="text-center text-2xl text-gray-6-- mb-5">Current date: {new Date().toLocaleDateString('de-De')}</h3>
 
       <form action={formAction} className="max-w-sm mx-auto">
         <div className="flex flex-col">
@@ -19,9 +55,11 @@ export default function Page() {
             <input
               type="month"
               defaultValue={
-                new Date().getFullYear() + "-0" + (new Date().getMonth() + 1)
+                monthOfPayState
               }
+              onChange={daysBetweenPays}
             />
+
           </div>
           <div className="flex gap-3">
             <div className="mb-3">
