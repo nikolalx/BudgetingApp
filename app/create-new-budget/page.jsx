@@ -1,45 +1,44 @@
 "use client";
 
 import { useActionState } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { login } from "../../actions/userHelpers";
+import { dateCalculator } from "../../actions/dateCalculations";
+import ManualDates from "../../components/manualDates";
 
-
+// export PATH="/c/Program Files/nodejs/:$PATH"
 
 export default function Page() {
   const [formState, formAction] = useActionState(login, {});
-  const [monthOfPayState, setMonthOfPayState] = useState(new Date().getFullYear() + "-0" + (new Date().getMonth() + 2));
-  const [lastDayPayState, setLastDayPayState] = useState("Last Day is:")
-  console.log(formState);
 
-  const daysBetweenPays = (e) => {
-    const value = e.target.value;
+  const [manualDatesState, setToManualDates] = useState(false);
 
-    const payDate = new Date(value + '-25');
+  const [fromState, setFromState] = useState("");
 
-    const dayName = payDate.toLocaleDateString('en-US', {weekday: 'short'});
+  const [toState, setToState] = useState("");
 
-    const DayNumb = payDate.getDate();
+  const [monthInputValue, setMonthInputValue] = useState(
+    new Date().toISOString().slice(0, 7)
+  );
 
-    const month = payDate.getMonth() + 1;
+  const [monthOfPayState, setMonthOfPayState] = useState({});
 
-    const year = payDate.getFullYear();
+  useEffect(() => {
+    const initialDateObject = dateCalculator(
+      new Date().getFullYear() + "-0" + (new Date().getMonth() + 2)
+    );
+    setMonthOfPayState(initialDateObject);
+  }, []);
 
-    //Last Day of Pay
-    const lastDayDate = new Date(value + '-25');
+  const handleMonthChange = (e) => {
+    const newValue = e.target.value; // Example: "2025-06"
+    setMonthInputValue(newValue);
 
-    const lastDayName = lastDayDate.toLocaleDateString('en-US', {weekday: 'short'});
+    const newDateObject = dateCalculator(newValue);
+    setMonthOfPayState(newDateObject);
+  };
 
-    const lastDayNumb = lastDayDate.getDate();
-
-    const lastDayMonth = lastDayDate.getMonth() + 2;
-
-    // payDate.setMonth(payDate.getMonth() + 1)
-    setMonthOfPayState(value);
-    setLastDayPayState()
-    console.log(dayName, DayNumb, month, year, 'payDay is :', payDate);
-  
-  }
+  console.log(fromState, toState)
 
   return (
     <>
@@ -47,20 +46,55 @@ export default function Page() {
         New Budgeting Month
       </h1>
 
-      <h3 className="text-center text-2xl text-gray-6-- mb-5">Current date: {new Date().toLocaleDateString('de-De')}</h3>
+      <h3 className="text-center text-2xl text-gray-6-- mb-5">
+        Current date: {new Date().toLocaleDateString("de-De")}
+      </h3>
+
+      <p className="text-center mb-5">
+        {monthOfPayState?.weeks !== undefined && (
+          <>
+            <small>(Calculating from 25. to 25.)</small>
+            <button
+              className="btn btn-xs ml-3 btn-dash"
+              onClick={(e) => {setToManualDates(!manualDatesState)
+                !manualDatesState ? (setFromState(''), setToState('')): setToManualDates(!manualDatesState)
+              }}
+            >
+              Toggle Manual Dates!
+            </button>
+
+            <br />
+            <span className="font-bold text-blue-600">
+              {monthOfPayState.weeks} weeks
+            </span>
+            {" and "}
+            <span className="font-bold text-green-600">
+              {monthOfPayState.days} days
+            </span>
+            {" until last day of budgeting month"}
+          </>
+        )}
+      </p>
 
       <form action={formAction} className="max-w-sm mx-auto">
         <div className="flex flex-col">
-          <div className="mb-3">
-            <input
-              type="month"
-              defaultValue={
-                monthOfPayState
-              }
-              onChange={daysBetweenPays}
+          {!manualDatesState ? (
+            <div className="mb-3">
+              <input
+                className="w-full text-center border border-gray-300 rounded-md p-2 [text-align:center]"
+                type="month"
+                defaultValue={monthInputValue}
+                onChange={handleMonthChange}
+              />
+            </div>
+          ) : (
+            <ManualDates
+              toState={toState}
+              setToState={setToState}
+              fromState={fromState}
+              setFromState={setFromState}
             />
-
-          </div>
+          )}
           <div className="flex gap-3">
             <div className="mb-3">
               <label className="floating-label">
