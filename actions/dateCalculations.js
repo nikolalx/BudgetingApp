@@ -1,22 +1,30 @@
-
 export const getWeeksAndDays = (a, b) => {
-    const utcA = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-    const utcB = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+  const utcA = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+  const utcB = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
 
-    const diffMs = Math.abs(utcA - utcB);
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const diffMs = Math.abs(utcA - utcB);
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    const weeks = Math.floor(diffDays / 7);
-    const days = diffDays % 7;
+  const weeks = Math.floor(diffDays / 7);
+  const days = diffDays % 7;
 
-    console.log("weeks: ", weeks, "days: ", days);
+  console.log("weeks: ", weeks, "days: ", days);
 
-    return { weeks: weeks, days: days };
-  };
+  return { weeks: weeks, days: days };
+};
 
-  export const dateCalculator = (value, value2) => {
-    const dateObject = {};
+export const dateCalculator = (value, fromDate, toDate) => {
+  const dateObject = {};
 
+  // If dates are set manually
+  if (fromDate && toDate) {
+    const { weeks, days } = getWeeksAndDays(toDate, fromDate);
+
+    dateObject.weeks = weeks;
+    dateObject.days = days;
+
+    return dateObject;
+  } else {
     const currentDate = new Date(value + "-25");
     const firstDay = new Date(currentDate.setMonth(currentDate.getMonth() - 1));
 
@@ -32,4 +40,5 @@ export const getWeeksAndDays = (a, b) => {
     dateObject.days = days;
 
     return dateObject;
-  };
+  }
+};
