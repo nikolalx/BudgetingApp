@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     const users = await getAllData('users');
     res.status(200).json(users);
   } catch (error) {
-    console.error("DB Error:", error); // 👈 This will log the real issue to your terminal
+    console.error("DB Error:", error);
     res.status(500).json({ error: "Failed to fetch users" });
   }
 }
